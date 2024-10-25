@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-dev01-sea-01"
+		},
+		"AzureInputBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"AzureOutputSqlDatabase1_password": {
+			"value": ""
+		},
+		"AzureOutputSqlDatabase1_properties_typeProperties_server": {
+			"value": "adf-dev01-sea-01-sql-databses.database.windows.net"
+		},
+		"AzureOutputSqlDatabase1_properties_typeProperties_database": {
+			"value": "adf-dev01-sea-01"
+		},
+		"AzureOutputSqlDatabase1_properties_typeProperties_userName": {
+			"value": "admin1"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
