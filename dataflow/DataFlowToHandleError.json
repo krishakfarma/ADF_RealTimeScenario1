@@ -1,0 +1,109 @@
+{
+	"name": "DataFlowToHandleError",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SalesINDDataset",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "tblSalesDatset",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "tblSalesBadDataset",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "split1"
+				},
+				{
+					"name": "FileColumnForBadRows"
+				},
+				{
+					"name": "FileColumnForGoodRows"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          saleDate as string,",
+				"          salesItem as string,",
+				"          county as string,",
+				"          quantity as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 split(!isNull(toDate(saleDate,'dd-MMM-yyyy')),",
+				"     disjoint: false) ~> split1@(GoodRows, BadRows)",
+				"split1@BadRows derive(fileName = 'SalesIND_2020_MAY_01.csv') ~> FileColumnForBadRows",
+				"split1@GoodRows derive(fileName = 'SalesIND_2020_MAY_01.csv',",
+				"          saleDate = toDate(saleDate, 'dd-MMM-yyyy'),",
+				"          quantity = toInteger(quantity)) ~> FileColumnForGoodRows",
+				"FileColumnForGoodRows sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          saleDate as date,",
+				"          salesItem as string,",
+				"          county as string,",
+				"          quantity as integer,",
+				"          fileName as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          saleDate,",
+				"          salesItem,",
+				"          county,",
+				"          quantity,",
+				"          fileName",
+				"     )) ~> sink1",
+				"FileColumnForBadRows sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          saleDate as string,",
+				"          salesItem as string,",
+				"          county as string,",
+				"          quantity as string,",
+				"          fileName as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          saleDate,",
+				"          salesItem,",
+				"          county,",
+				"          quantity,",
+				"          fileName",
+				"     )) ~> sink2"
+			]
+		}
+	}
+}

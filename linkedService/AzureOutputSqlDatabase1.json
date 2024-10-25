@@ -1,0 +1,17 @@
+{
+	"name": "AzureOutputSqlDatabase1",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"server": "adf-dev01-sea-01-sql-databses.database.windows.net",
+			"database": "adf-dev01-sea-01",
+			"encrypt": "mandatory",
+			"trustServerCertificate": false,
+			"authenticationType": "SQL",
+			"userName": "admin1",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDVDQzVDQkNGLUE4RUYtNDhEQi1BNUNELUYxMjc3NEM5RUQ0Rl8xYmM1MjkwYy1mNTdmLTQxMWYtYmQ3Yy1lNmE2MmViYjlkNmMiDQp9"
+		}
+	}
+}

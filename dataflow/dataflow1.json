@@ -1,0 +1,59 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "CustomerData",
+						"type": "DatasetReference"
+					},
+					"name": "cutomerdataflowactivity"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "output_cust_data",
+						"type": "DatasetReference"
+					},
+					"name": "customersinglerowintomultiplecolumn"
+				}
+			],
+			"transformations": [
+				{
+					"name": "splitingskillsintoarray"
+				},
+				{
+					"name": "flatten1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          customer_id as string,",
+				"          name as string,",
+				"          skills as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> cutomerdataflowactivity",
+				"cutomerdataflowactivity derive(skills = split(skills,',')) ~> splitingskillsintoarray",
+				"splitingskillsintoarray foldDown(unroll(skills),",
+				"     mapColumn(",
+				"          customer_id,",
+				"          name,",
+				"          skills",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
+				"flatten1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['cutomerdata.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> customersinglerowintomultiplecolumn"
+			]
+		}
+	}
+}
